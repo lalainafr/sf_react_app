@@ -2,13 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ArticleRepository::class)
+ * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class Article
+class Category
 {
     /**
      * @ORM\Id
@@ -25,12 +27,12 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $descritpion;
+    private $description;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="string", length=255)
      */
-    private $content;
+    private $color;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -45,17 +47,17 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $image;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $slug;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="articles")
+     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="category")
      */
-    private $category;
+    private $articles;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,26 +76,26 @@ class Article
         return $this;
     }
 
-    public function getDescritpion(): ?string
+    public function getDescription(): ?string
     {
-        return $this->descritpion;
+        return $this->description;
     }
 
-    public function setDescritpion(string $descritpion): self
+    public function setDescription(string $description): self
     {
-        $this->descritpion = $descritpion;
+        $this->description = $description;
 
         return $this;
     }
 
-    public function getContent(): ?string
+    public function getColor(): ?string
     {
-        return $this->content;
+        return $this->color;
     }
 
-    public function setContent(string $content): self
+    public function setColor(string $color): self
     {
-        $this->content = $content;
+        $this->color = $color;
 
         return $this;
     }
@@ -122,18 +124,6 @@ class Article
         return $this;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
-
     public function getSlug(): ?string
     {
         return $this->slug;
@@ -146,14 +136,32 @@ class Article
         return $this;
     }
 
-    public function getCategory(): ?Category
+    /**
+     * @return Collection<int, Article>
+     */
+    public function getArticles(): Collection
     {
-        return $this->category;
+        return $this->articles;
     }
 
-    public function setCategory(?Category $category): self
+    public function addArticle(Article $article): self
     {
-        $this->category = $category;
+        if (!$this->articles->contains($article)) {
+            $this->articles[] = $article;
+            $article->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArticle(Article $article): self
+    {
+        if ($this->articles->removeElement($article)) {
+            // set the owning side to null (unless already changed)
+            if ($article->getCategory() === $this) {
+                $article->setCategory(null);
+            }
+        }
 
         return $this;
     }
