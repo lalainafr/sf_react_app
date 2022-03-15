@@ -9,7 +9,10 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ * collectionOperations={"get"},
+ *  itemOperations={"get"}
+ * )
  */
 class Article
 {
