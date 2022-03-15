@@ -35,12 +35,13 @@ class Article
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Gedmo|Timespable(on="create)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
@@ -51,7 +52,7 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Gedmo|Slug(field={title})
+     * @Gedmo\Slug(fields={"title"})
      */
     private $slug;
 

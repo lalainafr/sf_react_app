@@ -37,19 +37,19 @@ class Category
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Gedmo|Timestampable(on="create")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * * @Gedmo|Timestampable(on="update")
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Gedmo|Slug(field={title})
+     * @Gedmo\Slug(fields={"title"})
      */
     private $slug;
 
