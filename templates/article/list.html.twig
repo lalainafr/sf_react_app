@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+{% block body %}
+<h1>Liste des articles</h1>
+
+{% for article in articles %}
+<ul>
+    <li>
+        <h2>
+            {{article.title}}
+        </h2>
+        <a href="{{ path('app_article_update', {'id': article.id}) }}">Modifier l'article</a>
+        <a href="{{ path('app_article_delete', {'id': article.id}) }}">Supprimer l'article</a>
+    </li>
+</ul>
+{% endfor %}
+
+<div>
+    <a href="{{ path('app_article_create')}}">Créer un nouvel article</a>
+</div>
+{% endblock %}

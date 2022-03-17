@@ -13,20 +13,21 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ArticleController extends AbstractController
 {
+
     /**
-     * @Route("/admin/articles", name="app_article_list")
+     * @Route("/", name="app_article_list")
      */
     public function listArticle(ArticleRepository $articleRepository)
     {
         $articles =  $articleRepository->findAll();
 
-        return $this->render('/article/index.html.twig', [
+        return $this->render('/article/list.html.twig', [
             "articles" => $articles,
         ]);
     }
 
     /**
-     * @Route("/admin/article/{id}/delete", name="app_article_list")
+     * @Route("/admin/article/{id}/delete", name="app_article_delete")
      */
     public function deleteArticle($id, ArticleRepository $articleRepository, EntityManagerInterface $em)
     {
@@ -69,10 +70,12 @@ class ArticleController extends AbstractController
         if ($articleForm->isSubmitted() && $articleForm->isSubmitted()) {
             $em->persist($article);
             $em->flush();
+
+            return $this->redirectToRoute("app_article_list");
         }
 
         return $this->render('/article/createArticle.html.twig', [
-            'articleForm' => $articleForm->createView()
+            'articleForm' => $articleForm->createView(),
         ]);
     }
 }
