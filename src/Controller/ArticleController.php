@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Article;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -33,5 +36,25 @@ class ArticleController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute('app_article_list');
+    }
+
+    /**
+     * @Route("/admin/article/create", name="app_article_create")
+     */
+    public function createArticle(Request $request, EntityManagerInterface $em)
+    {
+        $article = new Article();
+
+        $articleForm = $this->createForm(ArticleType::class, $article);
+        $articleForm->handleRequest($request);
+
+        if ($articleForm->isSubmitted() && $articleForm->isValid()) {
+            $em->persist($article);
+            $em->flush();
+        }
+
+        return $this->render('/article/createArticle.html.twig', [
+            'articleForm' => $articleForm->createView(),
+        ]);
     }
 }
